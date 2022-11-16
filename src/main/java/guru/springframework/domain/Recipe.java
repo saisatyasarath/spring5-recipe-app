@@ -1,5 +1,6 @@
 package guru.springframework.domain;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -31,12 +32,14 @@ public class Recipe {
 	public Integer servings;
 	public String source;
 	public String url;
+	
+	@Lob
 	public String directions;
 	
 	//private Difficulty difficuty;
 	
 	@OneToMany(cascade = CascadeType.ALL , mappedBy = "recipe")
-	private Set<Ingredient> ingredients;
+	private Set<Ingredient> ingredients = new HashSet<>();
 	
 	
 	@Lob
@@ -50,7 +53,7 @@ public class Recipe {
 	
 	@ManyToMany
 	@JoinTable(name = "recipe_category",joinColumns = @JoinColumn(name = "recipe_id"),inverseJoinColumns = @JoinColumn(name="catrgory_id"))
-	private Set<Category> catogeries;
+	private Set<Category> categories = new HashSet<>();
 	
 	
 	public Long getId() {
@@ -86,6 +89,16 @@ public class Recipe {
 	public Notes getNotes() {
 		return notes;
 	}
+	public void setNotes(Notes notes) {
+		this.notes = notes;
+		notes.setRecipe(this);
+	}
+	public Recipe addIngredient(Ingredient ingredient) {
+		ingredient.setRecipe(this);
+		this.ingredients.add(ingredient);
+		return this;
+	}
+	
 	public void setDescription(String description) {
 		this.description = description;
 	}
@@ -110,9 +123,9 @@ public class Recipe {
 	public void setImage(Byte[] image) {
 		this.image = image;
 	}
-	public void setNotes(Notes notes) {
-		this.notes = notes;
-	}
+//	public void setNotes(Notes notes) {
+//		this.notes = notes;
+//	}
 	public Difficulty getDifficulty() {
 		return difficulty;
 	}
@@ -125,11 +138,11 @@ public class Recipe {
 	public void setIngredients(Set<Ingredient> ingredients) {
 		this.ingredients = ingredients;
 	}
-	public Set<Category> getCatogeries() {
-		return catogeries;
+	public Set<Category> getCategories() {
+		return categories;
 	}
-	public void setCatogeries(Set<Category> catogeries) {
-		this.catogeries = catogeries;
+	public void setCategories(Set<Category> catogeries) {
+		this.categories = categories;//catogeries;
 	}
 	
 	
